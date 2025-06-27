@@ -14,7 +14,7 @@
 ## ✍️ Autor
 
 David Emmanuel Gámez Ibarra  
-🌐 GitHub: [@DariusGamez666](https://github.com/DavidGamez666)
+🌐 GitHub: [@DavidGamez666](https://github.com/DavidGamez666)
 
 ---
 
