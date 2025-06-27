@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Agenda de Contactos</title>
-
-     /* Estilo básico para el formulario */
+    <!-- Estilos básicos para el formulario -->
     <style>
         body { font-family: Arial; background: #f5f5f5; padding: 20px; }
         form { background: white; padding: 20px; border-radius: 10px; width: 300px; margin-bottom: 20px; }
