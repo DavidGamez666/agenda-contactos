@@ -17,31 +17,32 @@
 
 <!-- Formulario para ingresar datos del contacto -->
 <form method="POST">
-        <label>Tipo de Contacto:</label>
+        <label>Tipo de Contacto:</label><br>
     <select name="tipo" required onchange="toggleCampos(this.value)">
         <option value="base">General</option>
         <option value="personal">Personal</option>
         <option value="profesional">Profesional</option>
-    </select>
+    </select><br><br>
+
     
-    <label>Nombre:</label>
+    <label> Nombre:</label><br>
     <input type="text" name="nombre" required>
 
-    <label>Teléfono:</label>
+    <label>Teléfono:</label><br>
     <input type="text" name="telefono" required>
 
-    <label>Email:</label>
+    <label>Email:</label><br>
     <input type="email" name="email" required>
 
         <div id="campos_personal" style="display:none;">
-        <label>Cumpleaños:</label>
+        <label>Cumpleaños:</label><br>
         <input type="date" name="cumpleaños">
     </div>
 
     <div id="campos_profesional" style="display:none;">
-        <label>Empresa:</label>
+        <label>Empresa:</label><br>
         <input type="text" name="empresa">
-        <label>Puesto:</label>
+        <label>Puesto:</label><br>
         <input type="text" name="puesto">
     </div>
 
@@ -57,38 +58,39 @@ function toggleCampos(tipo) {
 
 <?php
 
-// Declaración de la clase "Contacto"
+// Clase base que representa un contacto general
 class Contacto {
     public $nombre;
     public $telefono;
     public $email;
 
-    // Constructor para inicializar los atributos
+    // Constructor: se ejecuta al crear el objeto
     public function __construct($nombre, $telefono, $email) {
         $this->nombre = $nombre;
         $this->telefono = $telefono;
         $this->email = $email;
     }
 
-    // Método para mostrar los detalles del contacto
+    // Método que devuelve los datos del contacto en formato HTML
     public function mostrarContacto() {
         return "<strong>$this->nombre</strong><br>Tel: $this->telefono<br>Email: $this->email";
     }
 }
 
-// Subclase: Personal
+// Subclase para contactos personales: agrega el campo cumpleaños
 class ContactoPersonal extends Contacto {
     public $cumpleaños;
     public function __construct($nombre, $telefono, $email, $cumpleaños) {
         parent::__construct($nombre, $telefono, $email);
         $this->cumpleaños = $cumpleaños;
     }
+    // Sobrescribe el método para incluir el cumpleaños
     public function mostrarContacto() {
         return parent::mostrarContacto() . "<br>Cumpleaños: $this->cumpleaños";
     }
 }
 
-// Subclase: Profesional
+// Subclase para contactos profesionales: agrega empresa y puesto
 class ContactoProfesional extends Contacto {
     public $empresa, $puesto;
     public function __construct($nombre, $telefono, $email, $empresa, $puesto) {
@@ -96,6 +98,8 @@ class ContactoProfesional extends Contacto {
         $this->empresa = $empresa;
         $this->puesto = $puesto;
     }
+
+    // Método sobrescrito para mostrar campos adicionales
     public function mostrarContacto() {
         return parent::mostrarContacto() . "<br>Empresa: $this->empresa<br>Puesto: $this->puesto";
     }
@@ -106,29 +110,34 @@ class ContactoProfesional extends Contacto {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validación de los datos recibidos
+
+    $tipo = $_POST["tipo"];
     $nombre = $_POST["nombre"];
     $telefono = $_POST["telefono"];
     $email = $_POST["email"];
-
+    
+// Se crea un objeto del tipo adecuado según la selección
     if ($tipo == "personal") {
         $cumpleaños = htmlspecialchars($_POST["cumpleaños"]);
+
+        //Instanciacion de un nuevo objeto "Contacto Personal"
         $contacto = new ContactoPersonal($nombre, $telefono, $email, $cumpleaños);
     } elseif ($tipo == "profesional") {
         $empresa = htmlspecialchars($_POST["empresa"]);
         $puesto = htmlspecialchars($_POST["puesto"]);
+
+        //Instanciacion de un nuevo objeto "Contacto Profesional"
         $contacto = new ContactoProfesional($nombre, $telefono, $email, $empresa, $puesto);
 
+    //Instanciacion de un nuevo objeto "Contacto"    
     } else {
         $contacto = new Contacto($nombre, $telefono, $email);
-    }
+    } 
 
-    //Instanciacion de un nuevo objeto "Contacto"
-    $nuevoContacto = new Contacto($nombre, $telefono, $email);
-
-    //Método para mostrar el contacto guardado
+    // Se muestra el contacto recién creado usando polimorfismo
     echo "<div class='resultado'>";
     echo "<h4>Contacto Guardado:</h4>";
-    echo $nuevoContacto->mostrarContacto();
+    echo $contacto->mostrarContacto();
     echo "</div>";
 }
 ?>
